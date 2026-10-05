@@ -9,14 +9,16 @@ export interface AdminStore {
   get(): Promise<Account | null>;
   create(account: Account): Promise<boolean>;
   save(account: Account): Promise<void>;
+  /**
+   * Atomic read-modify-write: `change` sees the latest account, and nothing is lost when two
+   * requests update at once (the Table store retries on a version conflict). Returns the new
+   * account, or null when there is none. `change` may run more than once, so keep it pure.
+   */
+  update(change: (a: Account) => Account): Promise<Account | null>;
 }
 
-export async function updateAccount(store: AdminStore, change: (a: Account) => Account): Promise<Account | null> {
-  const current = await store.get();
-  if (!current) return null;
-  const next = change(current);
-  await store.save(next);
-  return next;
+export function updateAccount(store: AdminStore, change: (a: Account) => Account): Promise<Account | null> {
+  return store.update(change);
 }
 
 export class MemoryStore implements AdminStore {
@@ -31,6 +33,11 @@ export class MemoryStore implements AdminStore {
   }
   async save(account: Account) {
     this.account = structuredClone(account);
+  }
+  async update(change: (a: Account) => Account) {
+    if (!this.account) return null;
+    this.account = structuredClone(change(structuredClone(this.account)));
+    return structuredClone(this.account);
   }
 }
 
@@ -52,6 +59,18 @@ export class FileStore implements AdminStore {
   async save(account: Account) {
     fs.mkdirSync(path.dirname(this.file), { recursive: true });
     fs.writeFileSync(this.file, JSON.stringify(account, null, 2), { mode: 0o600 });
+  }
+  // Synchronous file access end to end, so one process cannot interleave two updates.
+  async update(change: (a: Account) => Account) {
+    let current: Account;
+    try {
+      current = JSON.parse(fs.readFileSync(this.file, 'utf8')) as Account;
+    } catch {
+      return null;
+    }
+    const next = change(current);
+    fs.writeFileSync(this.file, JSON.stringify(next, null, 2), { mode: 0o600 });
+    return next;
   }
 }
 
@@ -92,6 +111,34 @@ export class TableStore implements AdminStore {
   async save(account: Account) {
     await this.ready;
     await this.table.upsertEntity({ partitionKey: PARTITION, rowKey: ROW, data: JSON.stringify(account) }, 'Replace');
+  }
+
+  // Conditional on the entity's ETag, so concurrent updates (say, a flood of password guesses)
+  // each see and keep the others' changes.
+  async update(change: (a: Account) => Account) {
+    await this.ready;
+    for (let attempt = 0; attempt < 8; attempt++) {
+      let entity;
+      try {
+        entity = await this.table.getEntity<{ data: string }>(PARTITION, ROW);
+      } catch (err) {
+        if ((err as { statusCode?: number }).statusCode === 404) return null;
+        throw err;
+      }
+      const next = change(JSON.parse(entity.data) as Account);
+      try {
+        await this.table.updateEntity(
+          { partitionKey: PARTITION, rowKey: ROW, data: JSON.stringify(next) },
+          'Replace',
+          { etag: entity.etag },
+        );
+        return next;
+      } catch (err) {
+        if ((err as { statusCode?: number }).statusCode === 412) continue;
+        throw err;
+      }
+    }
+    throw new Error('the admin account is too busy to update, try again');
   }
 }
 

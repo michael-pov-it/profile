@@ -64,18 +64,24 @@ export async function login(ctx: ApiContext): Promise<ApiOutput> {
   const password = text(ctx.body.password);
   const account = await store.get();
 
-  const passwordOk = await verifyPassword(password, account?.passwordHash ?? (await dummyHash()));
   const nameOk = account !== null && sameUsername(account.username, username);
 
-  if (!account || !nameOk) return out(401, { error: DENIED });
-  if (isLocked(account) || !passwordOk) {
-    if (!isLocked(account)) await store.save(afterFailedLogin(account));
-    return out(401, { error: DENIED });
+  // Count the attempt first and atomically. Counting after the slow password check would let a
+  // burst of parallel guesses all read the same counter and never trip the lock.
+  let wasLocked = false;
+  if (nameOk) {
+    await store.update((a) => {
+      wasLocked = isLocked(a);
+      return wasLocked ? a : afterFailedLogin(a);
+    });
   }
 
-  const next = afterSuccessfulLogin(account);
-  await store.save(next);
-  return { status: 200, body: { ok: true }, setCookies: startSession(ctx, next) };
+  // Always hash, even for an unknown username, so the response time gives nothing away.
+  const passwordOk = await verifyPassword(password, account?.passwordHash ?? (await dummyHash()));
+  if (!nameOk || wasLocked || !passwordOk) return out(401, { error: DENIED });
+
+  const next = await store.update(afterSuccessfulLogin);
+  return { status: 200, body: { ok: true }, setCookies: startSession(ctx, next ?? account!) };
 }
 
 export async function logout(ctx: ApiContext): Promise<ApiOutput> {

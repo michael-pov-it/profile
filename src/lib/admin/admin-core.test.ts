@@ -109,6 +109,13 @@ describe('store', () => {
     expect((await store.get())?.username).toBe('mike');
   });
 
+  it('applies parallel updates without losing any', async () => {
+    const store = new MemoryStore();
+    await store.create(newAccount('mike', 'h'));
+    await Promise.all(Array.from({ length: 25 }, () => store.update((a) => ({ ...a, failedLogins: a.failedLogins + 1 }))));
+    expect((await store.get())?.failedLogins).toBe(25);
+  });
+
   it('updateAccount changes a stored copy, and does nothing without an account', async () => {
     const store = new MemoryStore();
     expect(await updateAccount(store, (a) => a)).toBeNull();

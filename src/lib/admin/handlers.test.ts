@@ -101,6 +101,24 @@ describe('login', () => {
     expect(locked.setCookies).toBeUndefined();
   });
 
+  it('locks even when the guesses arrive in parallel', async () => {
+    const runtime = await runtimeWithAccount();
+    await Promise.all(
+      Array.from({ length: 12 }, () => h.login(ctx(runtime, { username: 'mike', password: 'wrong password here' }))),
+    );
+    expect((await runtime.store.get())?.lockedUntil).toBeGreaterThan(Date.now());
+    const right = await h.login(ctx(runtime, { username: 'mike', password: 'correct horse battery' }));
+    expect(right.status).toBe(401);
+  });
+
+  it('lets the right password in on the last allowed attempt', async () => {
+    const runtime = await runtimeWithAccount();
+    for (let i = 0; i < MAX_FAILURES - 1; i++) await h.login(ctx(runtime, { username: 'mike', password: 'wrong password here' }));
+    const right = await h.login(ctx(runtime, { username: 'mike', password: 'correct horse battery' }));
+    expect(right.status).toBe(200);
+    expect((await runtime.store.get())?.failedLogins).toBe(0);
+  });
+
   it('does not lock anything for an unknown username', async () => {
     const runtime = await runtimeWithAccount();
     for (let i = 0; i < MAX_FAILURES + 2; i++) await h.login(ctx(runtime, { username: 'other', password: 'x' }));
