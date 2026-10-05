@@ -37,7 +37,7 @@ If a file is invalid, `npm test` and `npm run build` fail with the file name and
 | `travel/` | `title`, `country`, `countryCode` (e.g. `JP`), `start`, `cities` (list of `{ name, lat, lng }`) | `days` |
 | `languages/` | `name`, `level`, `target` (CEFR `A1`–`C2`, target ≥ level), `since` | `methods`, `streakDays`, `duolingoScore` (whole number 0–160, as on LinkedIn) |
 | `sport/` | `name`, `unit`, `weekly` (2–52 numbers, oldest first) | `records` (`{ label, value, date }`), `events` (`{ name, date, result }`, no result = scheduled), `streakDays`, `active` |
-| `hobbies/` | `name`, `description`, `state` (`active` / `inactive`), `since` (when it entered that state) | |
+| `hobbies/` | `name`, `description`, `state` (`active` / `inactive`), `since` (when it entered that state) | `elo` (0–3500), `eloSource` (where the rating comes from) |
 
 All collections also accept `sample: true` for placeholder entries.
 

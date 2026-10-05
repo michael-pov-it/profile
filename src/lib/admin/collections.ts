@@ -134,6 +134,8 @@ export const COLLECTIONS: CollectionSpec[] = [
       { name: 'description', label: 'Description', kind: 'text', required: true },
       { name: 'state', label: 'State', kind: 'select', required: true, options: ['active', 'inactive'] },
       { name: 'since', label: 'Since', kind: 'month', required: true, hint: 'when it entered that state, YYYY-MM' },
+      { name: 'elo', label: 'Elo rating', kind: 'number', hint: 'chess only' },
+      { name: 'eloSource', label: 'Elo rating source', kind: 'text', hint: 'where the rating comes from, like Duolingo' },
       sample,
     ],
   },

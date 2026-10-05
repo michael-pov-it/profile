@@ -131,5 +131,8 @@ export const hobbySchema = z.object({
   description: z.string().min(1),
   state: z.enum(['active', 'inactive']),
   since: yearMonth,
+  // A rating such as a chess Elo, and where it comes from, so the page never implies a source.
+  elo: z.number().int().min(0).max(3500).optional(),
+  eloSource: z.string().min(1).optional(),
   sample,
 });
