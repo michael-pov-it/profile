@@ -81,6 +81,21 @@ describe('bookSchema', () => {
   });
 });
 
+describe('languageSchema duolingoScore', () => {
+  const base = { name: 'Spanish', level: 'A2', target: 'B2', since: '2017-02' };
+
+  it('is optional and accepts a whole-number score', () => {
+    expect(languageSchema.safeParse(base).success).toBe(true);
+    expect(languageSchema.parse({ ...base, duolingoScore: 94 }).duolingoScore).toBe(94);
+  });
+
+  it('rejects negative, fractional and out-of-range scores', () => {
+    for (const bad of [-1, 94.5, 161, '94']) {
+      expect(languageSchema.safeParse({ ...base, duolingoScore: bad }).success).toBe(false);
+    }
+  });
+});
+
 describe('languageSchema', () => {
   it('rejects a target below the current level', () => {
     const result = languageSchema.safeParse({ name: 'German', level: 'B2', target: 'A1', since: '2024-01' });

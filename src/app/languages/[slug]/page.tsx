@@ -51,6 +51,12 @@ export default async function LanguagePage({ params }: Params) {
             <dd>{lang.streakDays} days</dd>
           </>
         )}
+        {lang.duolingoScore !== undefined && (
+          <>
+            <dt className="text-dim">duolingo</dt>
+            <dd>{lang.duolingoScore}</dd>
+          </>
+        )}
       </dl>
 
       <h2 className="t-title mt-12 mb-3">stages</h2>

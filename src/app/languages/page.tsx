@@ -32,7 +32,7 @@ export default function LanguagesPage() {
                   <Link
                     href={`/languages/${l.slug}`}
                     data-nav-item
-                    className="row grid-cols-1 gap-x-[2ch] gap-y-1 sm:grid-cols-[14ch_8ch_minmax(0,1fr)]"
+                    className="row grid-cols-1 gap-x-[2ch] gap-y-1 sm:grid-cols-[14ch_8ch_minmax(0,1fr)_12ch]"
                   >
                     <span>
                       {l.name.toLowerCase()}
@@ -40,6 +40,7 @@ export default function LanguagesPage() {
                     </span>
                     <span className={status === 'running' ? 'text-warn' : ''}>{status}</span>
                     <PipelineStages level={l.level} target={l.target} />
+                    {l.duolingoScore !== undefined && <span className="text-dim">duolingo {l.duolingoScore}</span>}
                   </Link>
                 </li>
               );

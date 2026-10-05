@@ -102,6 +102,7 @@ export const COLLECTIONS: CollectionSpec[] = [
       { name: 'since', label: 'Since', kind: 'month', required: true, hint: 'YYYY-MM' },
       { name: 'methods', label: 'Methods', kind: 'tags', hint: 'one per line' },
       { name: 'streakDays', label: 'Streak (days)', kind: 'number' },
+      { name: 'duolingoScore', label: 'Duolingo score', kind: 'number', hint: 'whole number, as on your LinkedIn' },
       sample,
     ],
   },

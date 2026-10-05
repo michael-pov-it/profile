@@ -5,6 +5,7 @@ target: B2
 since: 2017-02
 methods: [ Duolingo, Series with Spanish subtitles ]
 streakDays: 2000
+duolingoScore: 94
 sample: false
 ---
 

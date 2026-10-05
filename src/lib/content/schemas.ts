@@ -104,6 +104,8 @@ export const languageSchema = z
     since: yearMonth,
     methods: z.array(z.string()).default([]),
     streakDays: z.number().int().nonnegative().optional(),
+    // Duolingo's own score for the language, as shown on LinkedIn. The English Test tops out at 160.
+    duolingoScore: z.number().int().min(0).max(160).optional(),
     sample,
   })
   .refine((l) => CEFR.indexOf(l.target) >= CEFR.indexOf(l.level), {
