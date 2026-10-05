@@ -35,9 +35,9 @@ If a file is invalid, `npm test` and `npm run build` fail with the file name and
 | `career/` | `company`, `role`, `start` | `end` (leave out while current) |
 | `books/` | `title`, `author`, `status` (`reading` / `paused` / `finished` / `queued`), `languages` (list of `EN` / `RU` / `UA` / `SK`, the language(s) you read it in) | `progress` 0–100 (required for reading/paused), `started`, `finished` (books without one are listed under "finished earlier"), `rating` 1–5, `published`, `readTitle` (the title on the copy you read), `titleIsTranslation: true` (when `title` is your own catalog translation, not an official title), `tags` |
 | `travel/` | `title`, `country`, `countryCode` (e.g. `JP`), `start`, `cities` (list of `{ name, lat, lng }`) | `days` |
-| `languages/` | `name`, `level`, `target` (CEFR `A1`–`C2`, target ≥ level), `since` | `methods`, `streakDays` |
+| `languages/` | `name`, `level`, `target` (CEFR `A1`–`C2`, target ≥ level), `since` | `methods`, `streakDays`, `duolingoScore` (whole number 0–160, as on LinkedIn) |
 | `sport/` | `name`, `unit`, `weekly` (2–52 numbers, oldest first) | `records` (`{ label, value, date }`), `events` (`{ name, date, result }`, no result = scheduled), `streakDays`, `active` |
-| `hobbies/` | `name`, `description`, `state` (`active` / `inactive`), `since` (when it entered that state) | |
+| `hobbies/` | `name`, `description`, `state` (`active` / `inactive`), `since` (when it entered that state) | `elo` (0–3500), `eloSource` (where the rating comes from) |
 
 All collections also accept `sample: true` for placeholder entries.
 

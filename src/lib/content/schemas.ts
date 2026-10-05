@@ -104,6 +104,8 @@ export const languageSchema = z
     since: yearMonth,
     methods: z.array(z.string()).default([]),
     streakDays: z.number().int().nonnegative().optional(),
+    // Duolingo's own score for the language, as shown on LinkedIn. The English Test tops out at 160.
+    duolingoScore: z.number().int().min(0).max(160).optional(),
     sample,
   })
   .refine((l) => CEFR.indexOf(l.target) >= CEFR.indexOf(l.level), {
@@ -129,5 +131,8 @@ export const hobbySchema = z.object({
   description: z.string().min(1),
   state: z.enum(['active', 'inactive']),
   since: yearMonth,
+  // A rating such as a chess Elo, and where it comes from, so the page never implies a source.
+  elo: z.number().int().min(0).max(3500).optional(),
+  eloSource: z.string().min(1).optional(),
   sample,
 });

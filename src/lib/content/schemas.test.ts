@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookSchema, day, languageSchema, yearMonth } from './schemas';
+import { bookSchema, day, hobbySchema, languageSchema, yearMonth } from './schemas';
 
 describe('date fields', () => {
   it('accepts YYYY and YYYY-MM strings', () => {
@@ -78,6 +78,36 @@ describe('bookSchema', () => {
 
   it('defaults tags and sample', () => {
     expect(bookSchema.parse({ ...base, status: 'queued' })).toMatchObject({ tags: [], sample: false });
+  });
+});
+
+describe('hobbySchema elo', () => {
+  const base = { name: 'Chess', description: 'Blitz', state: 'active', since: '2022-03' };
+
+  it('is optional and takes a rating with its source', () => {
+    expect(hobbySchema.safeParse(base).success).toBe(true);
+    expect(hobbySchema.parse({ ...base, elo: 1327, eloSource: 'Duolingo' })).toMatchObject({ elo: 1327, eloSource: 'Duolingo' });
+  });
+
+  it('rejects negative, fractional and absurd ratings', () => {
+    for (const bad of [-5, 1327.5, 4000, '1327']) {
+      expect(hobbySchema.safeParse({ ...base, elo: bad }).success).toBe(false);
+    }
+  });
+});
+
+describe('languageSchema duolingoScore', () => {
+  const base = { name: 'Spanish', level: 'A2', target: 'B2', since: '2017-02' };
+
+  it('is optional and accepts a whole-number score', () => {
+    expect(languageSchema.safeParse(base).success).toBe(true);
+    expect(languageSchema.parse({ ...base, duolingoScore: 94 }).duolingoScore).toBe(94);
+  });
+
+  it('rejects negative, fractional and out-of-range scores', () => {
+    for (const bad of [-1, 94.5, 161, '94']) {
+      expect(languageSchema.safeParse({ ...base, duolingoScore: bad }).success).toBe(false);
+    }
   });
 });
 

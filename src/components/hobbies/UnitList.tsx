@@ -27,7 +27,10 @@ export function UnitList({ hobbies }: { hobbies: Hobby[] }) {
                 <SampleTag show={h.sample} />
               </span>
               <span className={`col-start-2 sm:col-start-auto ${h.state === 'active' ? '' : 'text-dim'}`}>{unitState(h)}</span>
-              <span className="col-start-2 text-dim sm:col-start-auto">{h.description}</span>
+              <span className="col-start-2 text-dim sm:col-start-auto">
+                {h.description}
+                {h.elo !== undefined && `, elo ${h.elo}`}
+              </span>
             </Link>
           </li>
         ))}

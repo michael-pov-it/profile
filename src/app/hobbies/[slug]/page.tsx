@@ -47,6 +47,15 @@ export default async function HobbyPage({ params }: Params) {
         <dd className={active ? '' : 'text-dim'}>
           {unitState(hobby)} since {hobby.since}; {durationSince(hobby.since, now())} ago
         </dd>
+        {hobby.elo !== undefined && (
+          <>
+            <dt className="text-right text-dim">Elo:</dt>
+            <dd>
+              {hobby.elo}
+              {hobby.eloSource && <span className="text-dim"> ({hobby.eloSource})</span>}
+            </dd>
+          </>
+        )}
       </dl>
       {hobby.body && (
         <div className="mt-12">
