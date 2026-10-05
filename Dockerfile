@@ -27,6 +27,9 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+# The admin panel's Publish button reads this, so a deploy it starts keeps the same crawler setting.
+ARG SITE_INDEXABLE=false
+ENV SITE_INDEXABLE=$SITE_INDEXABLE
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

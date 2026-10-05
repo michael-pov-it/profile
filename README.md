@@ -41,6 +41,29 @@ If a file is invalid, `npm test` and `npm run build` fail with the file name and
 
 All collections also accept `sample: true` for placeholder entries.
 
+## Admin panel
+
+`/admin` is a private page for adding and editing the entries in `content/` from a form, with sign-in by passkey or password. It is off unless `ADMIN_SESSION_SECRET` (32 or more characters) is set. Production setup and the secrets are in [`infra/README.md`](infra/README.md).
+
+Try it locally:
+
+```bash
+ADMIN_SESSION_SECRET=$(openssl rand -base64 48) ADMIN_SETUP_TOKEN=local-setup npm run dev
+# open http://localhost:3000/admin/setup, use the token "local-setup", create an account
+```
+
+On another port, also set `ADMIN_ORIGIN=http://localhost:<port>`; the panel refuses requests from any other origin.
+
+Locally the account lives in `.admin-dev/` (ignored by git) and saves go straight into `content/`, so the dev server shows them at once. In production the account is in Azure Table Storage and saves are commits to GitHub; **Publish** then starts the deploy.
+
+| Variable | Purpose |
+|---|---|
+| `ADMIN_SESSION_SECRET` | Signs session cookies. Required, 32+ characters. |
+| `ADMIN_ORIGIN` | Public origin, e.g. `https://mike.euhub.co`. Required in production (https only); passkeys are bound to its host. Defaults to `http://localhost:3000` in development. |
+| `ADMIN_SETUP_TOKEN` | Key for the one-time `/admin/setup` page. Remove it after setup. |
+| `ADMIN_STORAGE_CONNECTION_STRING` | Azure Table Storage for the account. Required in production; development uses a file. |
+| `ADMIN_GITHUB_TOKEN`, `ADMIN_GITHUB_REPO`, `ADMIN_GITHUB_BRANCH` | Where saves are committed and which workflow Publish starts. Without a token, production cannot edit or publish. |
+
 ## Keyboard
 
 `1`–`6` switch sections, `j`/`k` move between items, `Enter` opens, `t` switches theme (crt / printout), `?` shows help.

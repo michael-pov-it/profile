@@ -14,9 +14,10 @@ Mike G.'s personal site (SRE & Dev/AI/Sec Ops Architect). It's styled as a retro
 | `/languages`, `/languages/[slug]` | A CI pipeline: CEFR levels A1–C2 as passed / running / pending / skipped stages |
 | `/sport`, `/sport/[slug]` | btop-style panels: weekly sparkline, this week / average / peak, records, events |
 | `/hobbies`, `/hobbies/[slug]` | `systemctl` units: active (running) or inactive (dead) |
+| `/admin/*` | Private panel for adding and editing content, passkey or password sign-in. Off unless `ADMIN_SESSION_SECRET` is set. |
 
 - **Domain:** `mike.euhub.co` (`siteUrl` in `content/profile.md`). Not wired up yet; see Deployment.
-- **Repo:** `github.com/EUHUB-AI/profile` (public). Default branch `main`.
+- **Repo:** `github.com/michael-pov-it/profile` (public, default branch `main`). It was `EUHUB-AI/profile` until 2026-09-30; the old name redirects. GitHub now presents the immutable OIDC subject `repo:michael-pov-it@57189917/profile@1105616066:environment:production`, and Azure has a federated credential for it (`gh-environment-production-michael-pov-it`) next to the old one.
 
 ## Stack and commands
 
@@ -46,6 +47,11 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
   - Navigation: tabs, keys.
   - Per section: meter, books, travel and travelMap, languages (CEFR stages), sport (sparkline and stats).
   - Home page: time, gitGraph (career lane layout), motd (home-page summary).
+- `src/lib/admin/`, `src/components/admin/`, `src/app/admin/`, `src/app/api/admin/`, `src/proxy.ts`: the admin panel. Design in `docs/superpowers/specs/2026-10-05-admin-panel-design.md`.
+  - `config`, `runtime`: environment and the "admin is off" switch. `password` (scrypt), `tokens`, `session` (signed cookies), `webauthn` (SimpleWebAuthn), `account` (lock-out rules), `store` (Azure Table, dev file, memory).
+  - `collections` and `entry`: field specs per collection, and form to file to form with validation by the real zod schemas.
+  - `repo` (GitHub Contents API, dev-only local files) and `deploy` (starts `deploy.yml`).
+  - `api` wraps every route (404 when off, same-origin JSON, session check, rate limit); `handlers` holds the logic and is unit tested.
 - `src/lib/theme.ts`:
   - The theme switch (`crt` dark, `printout` light).
   - `bootScript`, an inline `<head>` script that applies the theme before first paint and starts the one-time intro animation on `/`.
@@ -85,7 +91,8 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 - **Pipeline:** lint, types, tests, `infra/check-workflow.sh` → push to ACR → `infra/main.bicep`.
 - **Identities:** GitHub side is app registration `gh-oidc-mike-profile-deploy` (client ID `678fefdc-1e3f-444e-b489-bc2c4075b232`, federated subject `repo:EUHUB-AI/profile:environment:production`) with Contributor on the RG and AcrPush on the registry. The image pull uses user-assigned identity `mike-profile-web-identity` (AcrPull). All created by hand in the portal on 2026-09-29.
 - **Custom domain:** `mike.euhub.co` must stay recorded in `infra/main.parameters.json`, or the next deploy removes it. DNS for `euhub.co` is on Google Cloud DNS, edited by hand (CNAME `mike`, TXT `asuid.mike`).
-- **Guardrail:** `infra/check-workflow.sh` checks the workflow is manual-only and targets this RG.
+- **Guardrail:** `infra/check-workflow.sh` checks the workflow is manual-only, targets this RG and keeps the admin secrets `@secure()`.
+- **Admin panel:** needs the `ADMIN_SESSION_SECRET`, `ADMIN_SETUP_TOKEN` and `ADMIN_GITHUB_TOKEN` secrets on the `production` environment; Bicep then adds a storage account with an `admin` table. Steps in `infra/README.md`. A deploy without the secrets switches the panel off.
 - **Local `az` on the dell machine** is a service principal with no rights on this RG; Azure commands for this app run from Mike's home machine (user login) or the portal.
 - **Superseded:** the `rg-euhub-prod-apps` / `cae-euhub-prod` target (2026-09-24) was never deployed. The Cloudflare quick tunnel from 2026-09-25 is no longer needed.
 
@@ -111,6 +118,9 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 
 ## Open items / backlog
 
+- **Turn the admin panel on.** Built and tested locally (unit tests plus a browser run with a virtual passkey), not deployed. Mike must create the three secrets and the GitHub token, run the deploy, and do the setup page: steps in `infra/README.md`. Then delete `ADMIN_SETUP_TOKEN` and redeploy.
+- **Admin hardening ideas, not done:** pull-request saves instead of direct commits to `main`, managed identity instead of the storage key (needs a role assignment someone with Owner makes), a shared rate limit (today it is per replica; the account lock-out is shared).
+
 - **Rotate the leaked service principal secret.** On the dell machine, `~/.zsh_history` holds an `az login --service-principal` line with the secret of principal `72fa1486-fa27-4258-8747-d6758943dca1` (Contributor on `rg-lkwc-engine-prod`, unrelated to this site). Rotate it in Entra and delete the line.
 - **Decide whether the site needs a real wall.** It is hidden from crawlers by robots rules only (see Deployment). A scraper that ignores them, or anyone with the link, still gets in. Options: Container Apps built-in auth with Entra (recommended, one Bicep change) or an ingress IP allowlist. Not requested yet.
 - **Going public later.** Replace the sample content first, then run the deploy workflow with `site_indexable` ticked. Also confirm `siteUrl` in `content/profile.md` (currently `https://mike.euhub.co`) and re-check robots.txt and the sitemap on the live site.
@@ -129,6 +139,7 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 ## Gotchas learned
 
 - **Azure from this machine.** The dell machine's `az` session is a service principal with no rights on `mike-gordievsky` and no Graph rights, so it cannot create identities, app registrations or role assignments. Check `az account show --query user.type` first; it must say `user`. Azure commands for this app run from Mike's home machine or the portal.
+- **The permission classifier blocks production-affecting commands.** Starting the deploy workflow, `az ad app federated-credential create` and similar were refused even with Mike's go-ahead in chat. Give Mike the exact command to run with `!`; for JSON arguments pass a file (`--parameters @file.json`) because pasted quoting breaks.
 - **Claude can't write GitHub settings.** Creating the `production` environment and setting its variables is blocked by the session's permission classifier. Hand Mike the exact `gh` commands instead.
 - **OIDC subject form.** GitHub presents `repo:EUHUB-AI/profile:environment:production`, the plain-name form. The immutable-ID form (`repo:EUHUB-AI@<orgid>/profile@<repoid>:...`) fails with `AADSTS700213`. In the portal, pick "GitHub Actions deploying Azure resources" and type only the plain org, repo and environment names.
 - **Redeploys must keep the domain.** A Bicep PUT overwrites `ingress.customDomains`. `mike.euhub.co` and its certificate `mc-personal-brand-mike-euhub-co-5112` are recorded in `infra/main.parameters.json`; if the domain is ever rebound, update the certificate name there.

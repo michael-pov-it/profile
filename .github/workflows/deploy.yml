@@ -88,6 +88,12 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - id: deploy
+        # Admin panel secrets live in the "production" environment. A deploy replaces the app's
+        # whole configuration, so they are passed on every run; leaving them unset switches admin off.
+        env:
+          ADMIN_SESSION_SECRET: ${{ secrets.ADMIN_SESSION_SECRET }}
+          ADMIN_SETUP_TOKEN: ${{ secrets.ADMIN_SETUP_TOKEN }}
+          ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           # Unique --name per run: a cancelled run's ARM deployment can keep running
@@ -101,6 +107,9 @@ jobs:
               acrName="${{ env.ACR_NAME }}" \
               imageRepository="${{ env.IMAGE_REPOSITORY }}" \
               imageTag="${{ needs.build-and-push-image.outputs.image_tag }}" \
+              adminSessionSecret="$ADMIN_SESSION_SECRET" \
+              adminSetupToken="$ADMIN_SETUP_TOKEN" \
+              adminGithubToken="$ADMIN_GITHUB_TOKEN" \
             --query properties.outputs \
             --output json)
           echo "fqdn=https://$(echo "$result" | jq -r .fqdn.value)" >> "$GITHUB_OUTPUT"
