@@ -30,10 +30,10 @@ describe('hidden by default', () => {
 });
 
 describe('public when SITE_INDEXABLE=true', () => {
-  it('robots.txt allows crawling and points at the sitemap', () => {
+  it('robots.txt allows crawling except the admin area, and points at the sitemap', () => {
     vi.stubEnv('SITE_INDEXABLE', 'true');
     const result = robots();
-    expect(result.rules).toEqual({ userAgent: '*', allow: '/' });
+    expect(result.rules).toEqual({ userAgent: '*', allow: '/', disallow: ['/admin', '/api/admin'] });
     expect(result.sitemap).toBe('https://mike.euhub.co/sitemap.xml');
   });
 

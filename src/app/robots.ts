@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
   }
   const { siteUrl } = getProfile();
   return {
-    rules: { userAgent: '*', allow: '/' },
+    rules: { userAgent: '*', allow: '/', disallow: ['/admin', '/api/admin'] },
     ...(siteUrl ? { sitemap: `${siteUrl.replace(/\/$/, '')}/sitemap.xml` } : {}),
   };
 }

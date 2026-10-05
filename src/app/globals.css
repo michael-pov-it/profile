@@ -584,3 +584,94 @@ details[open] > .gitlog-summary .gitlog-toggle::after {
   padding-left: 2ch;
   border-left: 1px solid var(--dim);
 }
+
+/* admin forms */
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field-label {
+  color: var(--dim);
+}
+
+.field-hint {
+  color: var(--dim);
+  font-size: 0.75rem;
+}
+
+.field-error {
+  color: var(--alert);
+  font-size: 0.75rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.375rem 1ch;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  background: var(--band);
+  color: var(--fg);
+  font: inherit;
+}
+
+.input:focus-visible {
+  border-color: var(--warn);
+  outline: 2px solid var(--warn);
+  outline-offset: 0;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--alert);
+}
+
+textarea.input {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+@media (pointer: coarse) {
+  .input {
+    font-size: 1rem;
+  }
+}
+
+.btn {
+  padding: 0.25rem 2ch;
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.btn-danger {
+  border-color: var(--alert);
+  color: var(--alert);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--alert);
+  color: var(--bg);
+}
+
+.notice {
+  padding-left: 1ch;
+  border-left: 2px solid var(--warn);
+}
+
+.notice-error {
+  border-left-color: var(--alert);
+  color: var(--alert);
+}
+input[type="checkbox"] { accent-color: var(--fg); }

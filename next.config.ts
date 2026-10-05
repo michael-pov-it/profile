@@ -6,18 +6,23 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['dotted-map'],
   async headers() {
-    if (indexable) return [];
-    return [
+    const noindex = 'noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai';
+    // The admin area is never indexed or cached, even when the public site is made indexable.
+    const admin = [
       {
-        source: '/:path*',
+        source: '/admin/:path*',
         headers: [
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai',
-          },
+          { key: 'X-Robots-Tag', value: noindex },
+          { key: 'Cache-Control', value: 'no-store' },
         ],
       },
+      {
+        source: '/api/admin/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: noindex }],
+      },
     ];
+    if (indexable) return admin;
+    return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: noindex }] }, ...admin];
   },
 };
 
