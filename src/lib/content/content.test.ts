@@ -14,6 +14,8 @@ describe('content/ folder', () => {
     ['sport', getSports],
     ['hobbies', getHobbies],
   ] as const)('%s entries all pass validation', (_name, load) => {
-    expect(load().length).toBeGreaterThan(0);
+    // Loading validates every existing entry; optional sections may be empty.
+    expect(() => load()).not.toThrow();
+    expect(load().every((entry) => !entry.sample)).toBe(true);
   });
 });

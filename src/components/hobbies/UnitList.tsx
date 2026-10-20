@@ -4,11 +4,14 @@ import { StatusDot } from '@/components/StatusDot';
 import type { Hobby } from '@/lib/content/collections';
 
 export function unitState(hobby: Hobby): string {
+  if (!hobby.state) return 'status not recorded';
   return hobby.state === 'active' ? 'active (running)' : 'inactive (dead)';
 }
 
 export function UnitList({ hobbies }: { hobbies: Hobby[] }) {
   const active = hobbies.filter((h) => h.state === 'active').length;
+  const inactive = hobbies.filter((h) => h.state === 'inactive').length;
+  const unknown = hobbies.length - active - inactive;
   return (
     <>
       <ul className="rows">
@@ -36,7 +39,7 @@ export function UnitList({ hobbies }: { hobbies: Hobby[] }) {
         ))}
       </ul>
       <p className="mt-4 text-dim">
-        {hobbies.length} units listed: {active} active, {hobbies.length - active} inactive.
+        {hobbies.length} units listed: {active} active, {inactive} inactive{unknown > 0 && `, ${unknown} status not recorded`}.
       </p>
     </>
   );

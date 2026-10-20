@@ -132,8 +132,8 @@ export const COLLECTIONS: CollectionSpec[] = [
     fields: [
       { name: 'name', label: 'Hobby', kind: 'text', required: true },
       { name: 'description', label: 'Description', kind: 'text', required: true },
-      { name: 'state', label: 'State', kind: 'select', required: true, options: ['active', 'inactive'] },
-      { name: 'since', label: 'Since', kind: 'month', required: true, hint: 'when it entered that state, YYYY-MM' },
+      { name: 'state', label: 'State', kind: 'select', options: ['active', 'inactive'] },
+      { name: 'since', label: 'Since', kind: 'month', hint: 'when it entered that state, YYYY-MM; leave blank if unknown' },
       { name: 'elo', label: 'Elo rating', kind: 'number', hint: 'chess only' },
       { name: 'eloSource', label: 'Elo rating source', kind: 'text', hint: 'where the rating comes from, like Duolingo' },
       sample,

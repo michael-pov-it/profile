@@ -84,6 +84,13 @@ describe('bookSchema', () => {
 describe('hobbySchema elo', () => {
   const base = { name: 'Chess', description: 'Blitz', state: 'active', since: '2022-03' };
 
+  it('allows a confirmed rating without inventing activity status or dates', () => {
+    const hobby = hobbySchema.parse({ name: 'Chess', description: 'Duolingo chess', elo: 1327, eloSource: 'Duolingo' });
+    expect(hobby.state).toBeUndefined();
+    expect(hobby.since).toBeUndefined();
+    expect(hobby.elo).toBe(1327);
+  });
+
   it('is optional and takes a rating with its source', () => {
     expect(hobbySchema.safeParse(base).success).toBe(true);
     expect(hobbySchema.parse({ ...base, elo: 1327, eloSource: 'Duolingo' })).toMatchObject({ elo: 1327, eloSource: 'Duolingo' });
