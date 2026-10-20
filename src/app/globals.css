@@ -143,12 +143,14 @@ kbd {
 
 .shell-title {
   order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2ch;
   padding: 0.5rem 2ch;
   border-bottom: 1px solid var(--rule);
   color: var(--dim);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .shell-main {
