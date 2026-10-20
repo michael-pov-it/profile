@@ -41,11 +41,12 @@ export default async function HobbyPage({ params }: Params) {
       <dl className="mt-1 grid grid-cols-[8ch_minmax(0,1fr)] gap-x-[1ch] pl-[2ch]">
         <dt className="text-right text-dim">Loaded:</dt>
         <dd>
-          loaded (~/hobbies/{hobby.slug}.md; {active ? 'enabled' : 'disabled'})
+          loaded (~/hobbies/{hobby.slug}.md{hobby.state && `; ${active ? 'enabled' : 'disabled'}`})
         </dd>
         <dt className="text-right text-dim">Active:</dt>
         <dd className={active ? '' : 'text-dim'}>
-          {unitState(hobby)} since {hobby.since}; {durationSince(hobby.since, now())} ago
+          {unitState(hobby)}
+          {hobby.state && hobby.since && ` since ${hobby.since}; ${durationSince(hobby.since, now())} ago`}
         </dd>
         {hobby.elo !== undefined && (
           <>

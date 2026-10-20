@@ -115,7 +115,7 @@ export const COLLECTIONS: CollectionSpec[] = [
     fields: [
       { name: 'name', label: 'Sport', kind: 'text', required: true },
       { name: 'unit', label: 'Unit', kind: 'text', required: true, hint: 'km, h, sessions' },
-      { name: 'weekly', label: 'Weekly totals', kind: 'yaml', required: true, hint: '2 to 52 numbers, oldest first: [18, 22, 20]' },
+      { name: 'weekly', label: 'Weekly totals', kind: 'yaml', required: true, hint: '1 to 52 numbers, oldest first: [6]' },
       { name: 'streakDays', label: 'Streak (days)', kind: 'number' },
       { name: 'records', label: 'Records', kind: 'yaml', hint: '- { label: 10k, value: "44:12", date: "2026-05" }' },
       { name: 'events', label: 'Events', kind: 'yaml', hint: '- { name: Marathon, date: "2027-04-18", result: "3:59" }' },
@@ -132,8 +132,8 @@ export const COLLECTIONS: CollectionSpec[] = [
     fields: [
       { name: 'name', label: 'Hobby', kind: 'text', required: true },
       { name: 'description', label: 'Description', kind: 'text', required: true },
-      { name: 'state', label: 'State', kind: 'select', required: true, options: ['active', 'inactive'] },
-      { name: 'since', label: 'Since', kind: 'month', required: true, hint: 'when it entered that state, YYYY-MM' },
+      { name: 'state', label: 'State', kind: 'select', options: ['active', 'inactive'] },
+      { name: 'since', label: 'Since', kind: 'month', hint: 'when it entered that state, YYYY-MM; leave blank if unknown' },
       { name: 'elo', label: 'Elo rating', kind: 'number', hint: 'chess only' },
       { name: 'eloSource', label: 'Elo rating source', kind: 'text', hint: 'where the rating comes from, like Duolingo' },
       sample,
