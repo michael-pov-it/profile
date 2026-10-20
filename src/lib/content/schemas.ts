@@ -116,7 +116,7 @@ export const languageSchema = z
 export const sportSchema = z.object({
   name: z.string().min(1),
   unit: z.string().min(1),
-  weekly: z.array(z.number().nonnegative()).min(2).max(52),
+  weekly: z.array(z.number().nonnegative()).min(1).max(52),
   records: z.array(z.object({ label: z.string().min(1), value: z.string().min(1), date: yearMonth })).default([]),
   events: z
     .array(z.object({ name: z.string().min(1), date: day, result: z.string().optional() }))

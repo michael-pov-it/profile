@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { bookSchema, day, hobbySchema, languageSchema, yearMonth } from './schemas';
+import { bookSchema, day, hobbySchema, languageSchema, sportSchema, yearMonth } from './schemas';
+
+describe('sportSchema', () => {
+  const base = { name: 'Pool swimming', unit: 'km' };
+
+  it('accepts one reported weekly total without requiring invented history', () => {
+    expect(sportSchema.parse({ ...base, weekly: [6] }).weekly).toEqual([6]);
+  });
+
+  it('rejects missing totals, negative distances, and more than a year of weekly values', () => {
+    for (const weekly of [[], [-1], Array(53).fill(6)]) {
+      expect(sportSchema.safeParse({ ...base, weekly }).success).toBe(false);
+    }
+  });
+});
 
 describe('date fields', () => {
   it('accepts YYYY and YYYY-MM strings', () => {

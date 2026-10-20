@@ -115,7 +115,7 @@ export const COLLECTIONS: CollectionSpec[] = [
     fields: [
       { name: 'name', label: 'Sport', kind: 'text', required: true },
       { name: 'unit', label: 'Unit', kind: 'text', required: true, hint: 'km, h, sessions' },
-      { name: 'weekly', label: 'Weekly totals', kind: 'yaml', required: true, hint: '2 to 52 numbers, oldest first: [18, 22, 20]' },
+      { name: 'weekly', label: 'Weekly totals', kind: 'yaml', required: true, hint: '1 to 52 numbers, oldest first: [6]' },
       { name: 'streakDays', label: 'Streak (days)', kind: 'number' },
       { name: 'records', label: 'Records', kind: 'yaml', hint: '- { label: 10k, value: "44:12", date: "2026-05" }' },
       { name: 'events', label: 'Events', kind: 'yaml', hint: '- { name: Marathon, date: "2027-04-18", result: "3:59" }' },
