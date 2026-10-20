@@ -1,6 +1,6 @@
 ---
 name: Chess
 description: Duolingo chess
-elo: 1327
+elo: 1334
 eloSource: Duolingo
 ---
