@@ -1,8 +1,8 @@
 ---
-title: "Helsinki"
+title: Helsinki
 country: Finland
 countryCode: FI
-start: "2025-06"
+start: 2025-07
 cities:
-  - {"name": "Helsinki", "lat": 60.1699, "lng": 24.9384}
+  - { name: Helsinki, lat: 60.1699, lng: 24.9384 }
 ---
