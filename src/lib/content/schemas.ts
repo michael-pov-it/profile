@@ -99,8 +99,10 @@ export const tripSchema = z.object({
 export const languageSchema = z
   .object({
     name: z.string().min(1),
-    level: cefr,
-    target: cefr,
+    // A native language has no CEFR level: the page shows "native" in place of the stages.
+    native: z.boolean().default(false),
+    level: cefr.optional(),
+    target: cefr.optional(),
     since: yearMonth,
     methods: z.array(z.string()).default([]),
     streakDays: z.number().int().nonnegative().optional(),
@@ -108,9 +110,19 @@ export const languageSchema = z
     duolingoScore: z.number().int().min(0).max(160).optional(),
     sample,
   })
-  .refine((l) => CEFR.indexOf(l.target) >= CEFR.indexOf(l.level), {
-    path: ['target'],
-    message: 'target must be the same as or above level',
+  .superRefine((l, ctx) => {
+    if (l.native) {
+      for (const key of ['level', 'target'] as const) {
+        if (l[key]) ctx.addIssue({ code: 'custom', path: [key], message: `leave ${key} empty for a native language` });
+      }
+      return;
+    }
+    for (const key of ['level', 'target'] as const) {
+      if (!l[key]) ctx.addIssue({ code: 'custom', path: [key], message: `${key} is required unless the language is native` });
+    }
+    if (l.level && l.target && CEFR.indexOf(l.target) < CEFR.indexOf(l.level)) {
+      ctx.addIssue({ code: 'custom', path: ['target'], message: 'target must be the same as or above level' });
+    }
   });
 
 export const sportSchema = z.object({
@@ -134,5 +146,16 @@ export const hobbySchema = z.object({
   // A rating such as a chess Elo, and where it comes from, so the page never implies a source.
   elo: z.number().int().min(0).max(3500).optional(),
   eloSource: z.string().min(1).optional(),
+  sample,
+});
+
+export const MACHINE_GROUPS = ['work', 'home'] as const;
+
+export const machineSchema = z.object({
+  name: z.string().min(1),
+  group: z.enum(MACHINE_GROUPS),
+  purpose: z.string().min(1).optional(),
+  order: z.number().int().optional(),
+  rows: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
   sample,
 });

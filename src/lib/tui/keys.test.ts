@@ -5,9 +5,11 @@ const plain = { altKey: false, ctrlKey: false, metaKey: false, isEditable: false
 
 describe('resolveKey', () => {
   it('maps digits to section tabs', () => {
-    expect(resolveKey({ ...plain, key: '1' })).toEqual({ type: 'goto', href: '/' });
-    expect(resolveKey({ ...plain, key: '2' })).toEqual({ type: 'goto', href: '/books' });
-    expect(resolveKey({ ...plain, key: '6' })).toEqual({ type: 'goto', href: '/hobbies' });
+    const hrefs = ['/', '/setup', '/hobbies', '/languages', '/sport', '/travel', '/books'];
+    hrefs.forEach((href, i) => {
+      expect(resolveKey({ ...plain, key: String(i) })).toEqual({ type: 'goto', href });
+    });
+    expect(resolveKey({ ...plain, key: '7' })).toBeNull();
   });
 
   it('maps j, k, t and ?', () => {
@@ -18,8 +20,8 @@ describe('resolveKey', () => {
   });
 
   it('leaves browser shortcuts alone when Ctrl, Cmd or Alt is held', () => {
-    expect(resolveKey({ ...plain, key: '1', ctrlKey: true })).toBeNull();
-    expect(resolveKey({ ...plain, key: '1', metaKey: true })).toBeNull();
+    expect(resolveKey({ ...plain, key: '0', ctrlKey: true })).toBeNull();
+    expect(resolveKey({ ...plain, key: '0', metaKey: true })).toBeNull();
     expect(resolveKey({ ...plain, key: 't', altKey: true })).toBeNull();
   });
 

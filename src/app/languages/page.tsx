@@ -4,7 +4,7 @@ import { PipelineStages } from '@/components/languages/PipelineStages';
 import { SampleTag } from '@/components/SampleTag';
 import { Prompt } from '@/components/shell/Prompt';
 import { getLanguages } from '@/lib/content/collections';
-import { pipelineStatus } from '@/lib/tui/languages';
+import { languageStatus } from '@/lib/tui/languages';
 
 export const metadata: Metadata = {
   title: 'Languages',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function LanguagesPage() {
   const languages = getLanguages();
-  const running = languages.filter((l) => pipelineStatus(l.level, l.target) === 'running').length;
+  const running = languages.filter((l) => languageStatus(l) === 'running').length;
   return (
     <>
       <Prompt cmd="pipeline status lang" label="Languages" />
@@ -26,7 +26,7 @@ export default function LanguagesPage() {
           </p>
           <ul className="rows">
             {languages.map((l) => {
-              const status = pipelineStatus(l.level, l.target);
+              const status = languageStatus(l);
               return (
                 <li key={l.slug}>
                   <Link

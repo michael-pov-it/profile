@@ -19,6 +19,16 @@ export function Motd({ profile, summary, asOf }: { profile: Profile; summary: Mo
     '',
     `  System information as of ${asOf}`,
     '',
+    summary.machines > 0 ? (
+      <>
+        {'  Hardware:    '}
+        <Link href="/setup" data-nav-item>
+          {summary.machines} {summary.machines === 1 ? 'machine' : 'machines'}
+          {summary.connection ? `, ${summary.connection}` : ''}
+        </Link>
+        <SampleTag show={summary.samples.machines} />
+      </>
+    ) : null,
     <>
       {'  Reading:     '}
       <Link href="/books" data-nav-item>

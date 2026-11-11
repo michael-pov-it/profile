@@ -5,12 +5,13 @@ export interface Tab {
 }
 
 export const TABS: readonly Tab[] = [
-  { key: '1', href: '/', label: '~' },
-  { key: '2', href: '/books', label: 'books' },
-  { key: '3', href: '/travel', label: 'travel' },
-  { key: '4', href: '/languages', label: 'languages' },
-  { key: '5', href: '/sport', label: 'sport' },
-  { key: '6', href: '/hobbies', label: 'hobbies' },
+  { key: '0', href: '/', label: '~' },
+  { key: '1', href: '/setup', label: 'setup' },
+  { key: '2', href: '/hobbies', label: 'hobbies' },
+  { key: '3', href: '/languages', label: 'languages' },
+  { key: '4', href: '/sport', label: 'sport' },
+  { key: '5', href: '/travel', label: 'travel' },
+  { key: '6', href: '/books', label: 'books' },
 ];
 
 export function activeTabHref(pathname: string): string | undefined {

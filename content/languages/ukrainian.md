@@ -1,7 +1,6 @@
 ---
 name: Ukrainian
-level: C1
-target: C1
+native: true
 since: "1994"
 methods: [ Native speaker ]
 sample: false

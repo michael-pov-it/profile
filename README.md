@@ -1,6 +1,6 @@
 # mike-g profile
 
-Personal site styled as a retro terminal. Each section looks like the ops tool that fits it: an SSH login message and `git log` on the home page, `htop` for books, `traceroute` for travel, a CI pipeline for languages, `btop` for sport and `systemctl` for hobbies.
+Personal site styled as a retro terminal. Each section looks like the ops tool that fits it: an SSH login message and `git log` on the home page, `htop` for books, `traceroute` for travel, a CI pipeline for languages, `btop` for sport, `systemctl` for hobbies and `fastfetch` for setup.
 
 ## Develop
 
@@ -35,9 +35,10 @@ If a file is invalid, `npm test` and `npm run build` fail with the file name and
 | `career/` | `company`, `role`, `start` | `end` (leave out while current) |
 | `books/` | `title`, `author`, `status` (`reading` / `paused` / `finished` / `queued`), `languages` (list of `EN` / `RU` / `UA` / `SK`, the language(s) you read it in) | `progress` 0–100 (required for reading/paused), `started`, `finished` (books without one are listed under "finished earlier"), `rating` 1–5, `published`, `readTitle` (the title on the copy you read), `titleIsTranslation: true` (when `title` is your own catalog translation, not an official title), `tags` |
 | `travel/` | `title`, `country`, `countryCode` (e.g. `JP`), `start`, `cities` (list of `{ name, lat, lng }`) | `days` |
-| `languages/` | `name`, `level`, `target` (CEFR `A1`–`C2`, target ≥ level), `since` | `methods`, `streakDays`, `duolingoScore` (whole number 0–160, as on LinkedIn) |
+| `languages/` | `name`, `since`, and either `native: true` or `level` and `target` (CEFR `A1`–`C2`, target ≥ level) | `methods`, `streakDays`, `duolingoScore` (whole number 0–160, as on LinkedIn) |
 | `sport/` | `name`, `unit`, `weekly` (1–52 numbers, oldest first) | `records` (`{ label, value, date }`), `events` (`{ name, date, result }`, no result = scheduled), `streakDays`, `active` |
 | `hobbies/` | `name`, `description` | `state` (`active` / `inactive`, omit if unknown), `since` (when it entered that state, omit if unknown), `elo` (0–3500), `eloSource` (where the rating comes from) |
+| `machines/` | `name`, `group` (`work` / `home`), `rows` (list of `{ label, value }`, at least one) | `purpose`, `order` (whole number, lowest first within the group) |
 
 All collections also accept `sample: true` for placeholder entries.
 
@@ -66,4 +67,4 @@ Locally the account lives in `.admin-dev/` (ignored by git) and saves go straigh
 
 ## Keyboard
 
-`1`–`6` switch sections, `j`/`k` move between items, `Enter` opens, `t` switches theme (crt / printout), `?` shows help.
+`0`–`6` switch sections, `j`/`k` move between items, `Enter` opens, `t` switches theme (crt / printout), `?` shows help.
