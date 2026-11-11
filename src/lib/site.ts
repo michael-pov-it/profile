@@ -4,6 +4,10 @@ export function siteIsIndexable(): boolean {
   return process.env.SITE_INDEXABLE === 'true';
 }
 
+// Fetchers that build a link preview when someone shares the site. They may read the pages even
+// while the site is hidden from search engines and AI crawlers; they do not index anything.
+export const PREVIEW_AGENTS = ['LinkedInBot'];
+
 export const BLOCKED_AGENTS = [
   '*',
   'GPTBot',
