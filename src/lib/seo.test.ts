@@ -18,10 +18,18 @@ describe('hidden by default', () => {
     const result = robots();
     expect(result.sitemap).toBeUndefined();
     const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
-    expect(rules).toHaveLength(1);
-    expect(rules[0].disallow).toBe('/');
-    expect(rules[0].allow).toBeUndefined();
-    expect(rules[0].userAgent).toEqual(expect.arrayContaining(['*', 'GPTBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'CCBot']));
+    expect(rules).toHaveLength(2);
+    const blocked = rules[1];
+    expect(blocked.disallow).toBe('/');
+    expect(blocked.allow).toBeUndefined();
+    expect(blocked.userAgent).toEqual(expect.arrayContaining(['*', 'GPTBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'CCBot']));
+  });
+
+  it('robots.txt lets the LinkedIn link-preview fetcher read the pages, but not the admin area', () => {
+    const result = robots();
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
+    expect(rules[0]).toEqual({ userAgent: ['LinkedInBot'], allow: '/', disallow: ['/admin', '/api/admin'] });
+    expect(rules[1].userAgent).not.toContain('LinkedInBot');
   });
 
   it('sitemap.xml is empty', () => {

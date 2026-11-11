@@ -15,10 +15,15 @@ const martian = Martian_Mono({
 
 export function generateMetadata(): Metadata {
   const profile = getProfile();
+  const title = `${profile.name} | ${profile.role}`;
+  const description = `${profile.name}, ${profile.role}. Career, plus the books, travel, languages, sport and hobbies in between.`;
   return {
     ...(profile.siteUrl ? { metadataBase: new URL(profile.siteUrl) } : {}),
-    title: { default: `${profile.name} | ${profile.role}`, template: `%s | ${profile.name}` },
-    description: `${profile.name}, ${profile.role}. Career, plus the books, travel, languages, sport and hobbies in between.`,
+    title: { default: title, template: `%s | ${profile.name}` },
+    description,
+    // Link previews. The image comes from app/opengraph-image.tsx; every page shares this card.
+    openGraph: { type: 'website', siteName: profile.name, title, description },
+    twitter: { card: 'summary_large_image', title, description },
     ...(siteIsIndexable()
       ? {}
       : { robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false, noimageindex: true } } }),
