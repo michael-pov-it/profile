@@ -7,6 +7,7 @@ import {
   getCareer,
   getHobbies,
   getLanguages,
+  getMachines,
   getProfile,
   getSports,
   getTrips,
@@ -23,6 +24,7 @@ export default function Home() {
     languages: getLanguages(),
     sports: getSports(),
     hobbies: getHobbies(),
+    machines: getMachines(),
   });
   const jsonLd = {
     '@context': 'https://schema.org',

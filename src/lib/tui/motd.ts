@@ -1,7 +1,10 @@
-import type { Book, Hobby, Language, Sport, Trip } from '@/lib/content/collections';
+import type { Book, Hobby, Language, Machine, Sport, Trip } from '@/lib/content/collections';
+import { connectionPhrase } from './setup';
 import { countryCount, hostName } from './travel';
 
 export interface MotdSummary {
+  machines: number;
+  connection?: string;
   reading: number;
   nowReading?: { title: string; progress: number; slug: string; sample: boolean };
   countries: number;
@@ -11,7 +14,7 @@ export interface MotdSummary {
   streak?: { sport: string; days: number; sample: boolean };
   hobbiesActive: number;
   hobbiesTotal: number;
-  samples: { books: boolean; trips: boolean; languages: boolean; sports: boolean; hobbies: boolean };
+  samples: { books: boolean; trips: boolean; languages: boolean; sports: boolean; hobbies: boolean; machines: boolean };
 }
 
 export function summarize(input: {
@@ -20,6 +23,7 @@ export function summarize(input: {
   languages: Language[];
   sports: Sport[];
   hobbies: Hobby[];
+  machines: Machine[];
 }): MotdSummary {
   const reading = input.books.filter((b) => b.status === 'reading');
   const current = [...reading].sort((a, b) => (b.started ?? '').localeCompare(a.started ?? ''))[0];
@@ -29,6 +33,8 @@ export function summarize(input: {
     .sort((a, b) => (b.streakDays ?? 0) - (a.streakDays ?? 0))[0];
 
   return {
+    machines: input.machines.length,
+    connection: connectionPhrase(input.machines),
     reading: reading.length,
     nowReading: current
       ? { title: current.title, progress: current.progress ?? 0, slug: current.slug, sample: current.sample }
@@ -53,6 +59,7 @@ export function summarize(input: {
       languages: input.languages.some((l) => l.sample),
       sports: input.sports.some((s) => s.sample),
       hobbies: input.hobbies.some((h) => h.sample),
+      machines: input.machines.some((m) => m.sample),
     },
   };
 }
