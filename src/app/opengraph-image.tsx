@@ -1,19 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ImageResponse } from 'next/og';
-import { getCareer, getProfile } from '@/lib/content/collections';
-import { cardCommits } from '@/lib/tui/shareCard';
+import { getProfile } from '@/lib/content/collections';
 
 // The link preview image (LinkedIn, Slack, chat apps): the home page's terminal, at 1200x630.
 // Rendered once at build time. Colors are the dark `crt` theme from globals.css.
-export const alt = 'Terminal login screen for Mike G., SRE and DevOps architect, with his latest roles as a git log';
+export const alt = 'Terminal login screen for Mike G., SRE and DevOps architect, listing his certifications';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 const BG = '#0c1410';
 const FG = '#8af5a0';
 const DIM = '#56966a';
-const WARN = '#ffb547';
 const RULE = '#2a4535';
 
 // Static cuts of Martian Mono: the image renderer cannot use the variable web font.
@@ -21,7 +19,6 @@ const font = (file: string) => fs.readFileSync(path.join(process.cwd(), 'src/ass
 
 export default function OpengraphImage() {
   const profile = getProfile();
-  const commits = cardCommits(getCareer());
   const domain = profile.siteUrl ? new URL(profile.siteUrl).host : `${profile.handle}@${profile.host}`;
 
   return new ImageResponse(
@@ -43,16 +40,16 @@ export default function OpengraphImage() {
             <div style={{ display: 'flex', marginTop: 30, fontSize: 40, fontWeight: 700 }}>{profile.name}</div>
             <div style={{ display: 'flex', marginTop: 6, fontSize: 34 }}>{profile.role}</div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', marginTop: 34, fontSize: 28, lineHeight: 1.5 }}>
-              {commits.map((commit) => (
-                <div key={commit.hash} style={{ display: 'flex' }}>
-                  <span style={{ color: DIM, marginRight: 18 }}>*</span>
-                  <span style={{ color: WARN, marginRight: 18 }}>{commit.hash}</span>
-                  <span style={{ marginRight: 18 }}>{commit.role}</span>
-                  <span style={{ color: DIM }}>{commit.span}</span>
+            {profile.certifications.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 34, fontSize: 26, lineHeight: 1.5 }}>
+                <div style={{ display: 'flex', color: DIM }}>$ ls ~/certs</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 40 }}>
+                  {profile.certifications.map((cert) => (
+                    <span key={cert}>{cert}</span>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
 
           <div
