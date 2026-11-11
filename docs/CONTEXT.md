@@ -81,6 +81,7 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
   - From 1536px up, the frame is `min(94vw, 200ch)`.
   - Home, travel and sport switch to multi-column layouts.
   - Reading text stays at 68 characters per line.
+- **Phones (below 640px):** the tab bar drops the key digits and wraps onto two rows; intro lines wrap under their value in a narrower cut of the font; career entries stack role, company and dates; language stages use short connectors to stay on one line. Check changes at 390px and 360px.
 - **Keyboard:** `0`–`6` switch tabs, `j`/`k` move between rows, `t` switches theme, `?` opens help. Shortcuts never fire with Ctrl/Cmd/Alt held or while typing in a field.
 
 ## Deployment
@@ -127,7 +128,6 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 - **Going public later.** Run the deploy workflow with `site_indexable` ticked. Also confirm `siteUrl` in `content/profile.md` (currently `https://mike.euhub.co`) and re-check robots.txt and the sitemap on the live site.
 - **Unused GitHub variables.** `AZURE_ACR_NAME` and `AZURE_CONTAINER_APPS_ENVIRONMENT` on the `production` environment are leftovers from the abandoned shared-platform setup. The workflow ignores them, so delete them when convenient.
 - **Confirm the travel origin.** `home` is set to Bratislava, a guess from the +421 phone number.
-- **Phone layout:** the intro lines wrap unevenly at 390px. Smaller intro text or no-wrap values would fix it.
 - **UHD:** the frame caps at 200 characters, about 80% of a 3840px screen. Raise the cap if Mike wants it wider.
 - **Dates frozen at build time:** "System information as of …" and the hobby "… ago" durations only update on each deploy.
 - **Smells left from the review, deliberately not fixed:**

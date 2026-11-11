@@ -83,7 +83,7 @@ kbd {
 }
 
 .t-display {
-  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+  font-size: clamp(1.375rem, 4.5vw, 2.5rem);
   line-height: 1.15;
   font-weight: 700;
   font-variation-settings: "wdth" 112.5, "wght" 700;
@@ -92,6 +92,13 @@ kbd {
 
 :root:not([data-theme="light"]) .t-display {
   text-shadow: 0 0 12px color-mix(in srgb, var(--fg) 35%, transparent);
+}
+
+/* One word of a command heading: it moves to the next line whole, and only breaks inside when it
+   is wider than the line. */
+.cmd-word {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .t-title {
@@ -202,6 +209,28 @@ kbd {
 
 .tab[aria-current="page"] .tab-key {
   color: var(--bg);
+}
+
+/* Phones have no keyboard for the tab keys: drop the digits and wrap the labels onto two rows, so
+   every tab is visible without scrolling. */
+@media (max-width: 639px) {
+  .shell-tabs ul {
+    flex-wrap: wrap;
+  }
+
+  .shell-tabs li {
+    flex: 1 1 auto;
+  }
+
+  .tab {
+    min-width: 6ch;
+    padding: 0.5rem 1ch;
+    text-align: center;
+  }
+
+  .tab-key {
+    display: none;
+  }
 }
 
 @media (min-width: 640px) {
@@ -469,6 +498,14 @@ kbd {
   vertical-align: middle;
 }
 
+/* Shorter connectors on phones keep A1 to C2 on one line. */
+@media (max-width: 639px) {
+  .stage + .stage::before {
+    width: 0.6ch;
+    margin: 0 0.3ch;
+  }
+}
+
 .panel {
   position: relative;
   display: block;
@@ -508,6 +545,22 @@ kbd {
   font: inherit;
   line-height: 1.6;
   white-space: pre-wrap;
+}
+
+.motd-line {
+  display: block;
+}
+
+.motd-hang {
+  padding-left: var(--hang);
+  text-indent: calc(-1 * var(--hang));
+}
+
+/* A narrower cut of the font on phones fits about seven more characters per line. */
+@media (max-width: 639px) {
+  .motd {
+    font-variation-settings: "wdth" 80;
+  }
 }
 
 .motd a {
@@ -569,6 +622,17 @@ html[data-motd-play] .motd-line {
 
 .gitlog-summary:hover {
   background: color-mix(in srgb, var(--fg) 8%, transparent);
+}
+
+.gitlog-role {
+  display: inline-block;
+}
+
+@media (max-width: 639px) {
+  .gitlog-company,
+  .gitlog-meta {
+    display: block;
+  }
 }
 
 .gitlog-toggle::after {

@@ -16,6 +16,10 @@ function BookTitle({ book }: { book: Book }) {
 }
 
 function FinishedRows({ books }: { books: Book[] }) {
+  // On phones a list with no finish dates drops the date column, so titles start at the left edge.
+  const dated = books.some((b) => b.finished);
+  const phoneGrid = dated ? 'grid-cols-[8ch_minmax(0,1fr)]' : 'grid-cols-[minmax(0,1fr)]';
+  const phoneCol = dated ? 'col-start-2' : '';
   return (
     <ul className="rows">
       {books.map((b) => (
@@ -23,10 +27,10 @@ function FinishedRows({ books }: { books: Book[] }) {
           <Link
             href={`/books/${b.slug}`}
             data-nav-item
-            className="row grid-cols-[8ch_minmax(0,1fr)] gap-x-[2ch] sm:grid-cols-[8ch_4ch_minmax(0,1fr)_22ch_10ch]"
+            className={`row ${phoneGrid} gap-x-[2ch] sm:grid-cols-[8ch_4ch_minmax(0,1fr)_22ch_10ch]`}
           >
-            <span className="text-dim">{b.finished}</span>
-            <span className="text-dim">
+            <span className={`text-dim ${dated ? '' : 'hidden sm:block'}`}>{b.finished}</span>
+            <span className={`text-dim sm:row-start-auto ${b.rating ? (dated ? 'row-start-2' : '') : 'hidden sm:block'}`}>
               {b.rating && (
                 <>
                   <span aria-hidden="true">{b.rating}/5</span>
@@ -34,11 +38,11 @@ function FinishedRows({ books }: { books: Book[] }) {
                 </>
               )}
             </span>
-            <span className="col-start-2 sm:col-start-auto">
+            <span className={`${phoneCol} ${dated ? 'row-start-1' : ''} sm:col-start-auto sm:row-start-auto`}>
               <BookTitle book={b} />
             </span>
-            <span className="col-start-2 text-dim sm:col-start-auto">{b.author}</span>
-            <span className="col-start-2 text-dim sm:col-start-auto">{languageNames(b)}</span>
+            <span className={`${phoneCol} text-dim sm:col-start-auto`}>{b.author}</span>
+            <span className={`${phoneCol} text-dim sm:col-start-auto`}>{languageNames(b)}</span>
           </Link>
         </li>
       ))}
