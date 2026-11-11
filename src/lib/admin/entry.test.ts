@@ -99,6 +99,36 @@ describe('buildEntry', () => {
   });
 });
 
+describe('machines', () => {
+  const machines = collectionSpec('machines')!;
+
+  it('builds a machine from the form and reads it back', () => {
+    const result = buildEntry(
+      machines,
+      'laptop',
+      form(machines, {
+        name: 'laptop',
+        group: 'home',
+        order: '3',
+        rows: '- { label: cpu, value: "Core Ultra 7" }',
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(matter(result.text).data).toEqual({
+      name: 'laptop',
+      group: 'home',
+      order: 3,
+      rows: [{ label: 'cpu', value: 'Core Ultra 7' }],
+    });
+  });
+
+  it('rejects a machine with no rows, naming the field', () => {
+    const result = buildEntry(machines, 'laptop', form(machines, { name: 'laptop', group: 'home', rows: '' }));
+    expect(result).toMatchObject({ ok: false, errors: { rows: expect.any(String) } });
+  });
+});
+
 describe('dump', () => {
   it('uses flow style for nested lists and keeps scalars plain', () => {
     expect(dump({ weekly: [1, 2, 3], cities: [{ name: 'A', lat: 1, lng: 2 }], title: 'Plain' })).toBe(
