@@ -16,6 +16,7 @@ certifications:
   - CKAD
   - CKA
   - AWS Certified Solutions Architect – Associate (SAA-C03)
+  - CCAR-F (in-progress)
 contact:
   email: mike@euhub.sk
 ---
