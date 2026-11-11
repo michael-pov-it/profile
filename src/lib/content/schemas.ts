@@ -136,3 +136,14 @@ export const hobbySchema = z.object({
   eloSource: z.string().min(1).optional(),
   sample,
 });
+
+export const MACHINE_GROUPS = ['work', 'home'] as const;
+
+export const machineSchema = z.object({
+  name: z.string().min(1),
+  group: z.enum(MACHINE_GROUPS),
+  purpose: z.string().min(1).optional(),
+  order: z.number().int().optional(),
+  rows: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
+  sample,
+});

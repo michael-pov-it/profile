@@ -38,6 +38,7 @@ If a file is invalid, `npm test` and `npm run build` fail with the file name and
 | `languages/` | `name`, `level`, `target` (CEFR `A1`–`C2`, target ≥ level), `since` | `methods`, `streakDays`, `duolingoScore` (whole number 0–160, as on LinkedIn) |
 | `sport/` | `name`, `unit`, `weekly` (1–52 numbers, oldest first) | `records` (`{ label, value, date }`), `events` (`{ name, date, result }`, no result = scheduled), `streakDays`, `active` |
 | `hobbies/` | `name`, `description` | `state` (`active` / `inactive`, omit if unknown), `since` (when it entered that state, omit if unknown), `elo` (0–3500), `eloSource` (where the rating comes from) |
+| `machines/` | `name`, `group` (`work` / `home`), `rows` (list of `{ label, value }`, at least one) | `purpose`, `order` (whole number, lowest first within the group) |
 
 All collections also accept `sample: true` for placeholder entries.
 

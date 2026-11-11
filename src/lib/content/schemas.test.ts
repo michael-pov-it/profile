@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookSchema, day, hobbySchema, languageSchema, sportSchema, yearMonth } from './schemas';
+import { bookSchema, day, hobbySchema, languageSchema, machineSchema, sportSchema, yearMonth } from './schemas';
 
 describe('sportSchema', () => {
   const base = { name: 'Pool swimming', unit: 'km' };
@@ -137,5 +137,24 @@ describe('languageSchema', () => {
     const result = languageSchema.safeParse({ name: 'German', level: 'B2', target: 'A1', since: '2024-01' });
     expect(result.success).toBe(false);
     expect(result.error?.issues[0].path).toEqual(['target']);
+  });
+});
+
+describe('machineSchema', () => {
+  const base = { name: 'workpc', group: 'work', rows: [{ label: 'cpu', value: 'x' }] };
+  it('accepts a minimal machine and defaults sample', () => {
+    expect(machineSchema.parse(base)).toEqual({ ...base, sample: false });
+  });
+  it('rejects an unknown group', () => {
+    expect(machineSchema.safeParse({ ...base, group: 'office' }).success).toBe(false);
+  });
+  it('needs at least one row', () => {
+    expect(machineSchema.safeParse({ ...base, rows: [] }).success).toBe(false);
+  });
+  it('rejects a row with an empty value', () => {
+    expect(machineSchema.safeParse({ ...base, rows: [{ label: 'cpu', value: '' }] }).success).toBe(false);
+  });
+  it('rejects a fractional order', () => {
+    expect(machineSchema.safeParse({ ...base, order: 1.5 }).success).toBe(false);
   });
 });

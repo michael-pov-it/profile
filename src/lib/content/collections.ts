@@ -5,6 +5,7 @@ import {
   careerSchema,
   hobbySchema,
   languageSchema,
+  machineSchema,
   profileSchema,
   sportSchema,
   tripSchema,
@@ -17,6 +18,7 @@ export type Trip = Entry<z.output<typeof tripSchema>>;
 export type Language = Entry<z.output<typeof languageSchema>>;
 export type Sport = Entry<z.output<typeof sportSchema>>;
 export type Hobby = Entry<z.output<typeof hobbySchema>>;
+export type Machine = Entry<z.output<typeof machineSchema>>;
 
 export const getProfile = (): Profile => loadSingle('profile.md', profileSchema);
 export const getCareer = (): Job[] => loadCollection('career', careerSchema);
@@ -25,6 +27,7 @@ export const getTrips = (): Trip[] => loadCollection('travel', tripSchema);
 export const getLanguages = (): Language[] => loadCollection('languages', languageSchema);
 export const getSports = (): Sport[] => loadCollection('sport', sportSchema);
 export const getHobbies = (): Hobby[] => loadCollection('hobbies', hobbySchema);
+export const getMachines = (): Machine[] => loadCollection('machines', machineSchema);
 
 export const getBook = (slug: string) => getBooks().find((b) => b.slug === slug);
 export const getTrip = (slug: string) => getTrips().find((t) => t.slug === slug);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getBooks, getCareer, getHobbies, getLanguages, getProfile, getSports, getTrips } from './collections';
+import { getBooks, getCareer, getHobbies, getLanguages, getMachines, getProfile, getSports, getTrips } from './collections';
 
 describe('content/ folder', () => {
   it('has a valid profile', () => {
@@ -13,6 +13,7 @@ describe('content/ folder', () => {
     ['languages', getLanguages],
     ['sport', getSports],
     ['hobbies', getHobbies],
+    ['machines', getMachines],
   ] as const)('%s entries all pass validation', (_name, load) => {
     // Loading validates every existing entry; optional sections may be empty.
     expect(() => load()).not.toThrow();
