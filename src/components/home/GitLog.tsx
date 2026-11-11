@@ -24,13 +24,15 @@ export function GitLog({ jobs }: { jobs: Job[] }) {
                 <span>
                   <span className="text-warn">{shortHash(row.entry.slug)}</span>
                   {row.entry.slug === headSlug && <span className="text-dim"> (HEAD -&gt; main)</span>}{' '}
-                  {row.entry.role} @ {row.entry.company}
-                  <span className="text-dim whitespace-nowrap">
-                    {' '}
-                    {row.entry.start}..{row.entry.end ?? 'now'}
+                  <span className="gitlog-role">{row.entry.role}</span>{' '}
+                  <span className="gitlog-company">@ {row.entry.company}</span>{' '}
+                  <span className="gitlog-meta">
+                    <span className="text-dim whitespace-nowrap">
+                      {row.entry.start}..{row.entry.end ?? 'now'}
+                    </span>
+                    <SampleTag show={row.entry.sample} />
+                    <span className="gitlog-toggle" aria-hidden="true" />
                   </span>
-                  <SampleTag show={row.entry.sample} />
-                  <span className="gitlog-toggle" aria-hidden="true" />
                 </span>
               </summary>
               <div className="gitlog-body">

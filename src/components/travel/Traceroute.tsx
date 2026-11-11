@@ -14,15 +14,15 @@ export function Traceroute({ hops, from }: { hops: Hop[]; from: string }) {
             <Link
               href={`/travel/${hop.trip.slug}`}
               data-nav-item
-              className="row grid-cols-[3ch_minmax(0,1fr)] gap-x-[2ch] sm:grid-cols-[3ch_18ch_10ch_8ch_minmax(0,1fr)]"
+              className="row grid-cols-[3ch_auto_minmax(0,1fr)] gap-x-[2ch] sm:grid-cols-[3ch_18ch_10ch_8ch_minmax(0,1fr)]"
             >
               <span className="text-right text-dim">{hop.n}</span>
-              <span>{hop.host}</span>
+              <span className="col-span-2 sm:col-span-1">{hop.host}</span>
               <span className="col-start-2 text-dim sm:col-start-auto sm:text-right">
                 {hop.km.toLocaleString('en-US')} km
               </span>
-              <span className="col-start-2 text-dim sm:col-start-auto">{hop.trip.start}</span>
-              <span className="col-start-2 sm:col-start-auto">
+              <span className="text-dim">{hop.trip.start}</span>
+              <span className="col-span-2 col-start-2 sm:col-span-1 sm:col-start-auto">
                 {hop.trip.title}
                 <SampleTag show={hop.trip.sample} />
               </span>

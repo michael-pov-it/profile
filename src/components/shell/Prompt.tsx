@@ -17,7 +17,12 @@ export function Prompt({
     <Tag id={id} className={className ? `${base} ${className}` : base}>
       <span aria-hidden="true">
         <span className="text-dim">$ </span>
-        {cmd}
+        {cmd.split(' ').map((word, i) => (
+          <span key={i}>
+            {i > 0 && ' '}
+            <span className="cmd-word">{word}</span>
+          </span>
+        ))}
       </span>
       <span className="sr-only">{label}</span>
     </Tag>

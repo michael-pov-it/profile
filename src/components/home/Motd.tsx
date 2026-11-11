@@ -73,7 +73,8 @@ export function Motd({ profile, summary, asOf }: { profile: Profile; summary: Mo
         <Link href={`/books/${summary.nowReading.slug}`} data-nav-item>
           {summary.nowReading.title}
         </Link>
-        {` (${summary.nowReading.progress}%)`}
+        {' '}
+        <span className="whitespace-nowrap">({summary.nowReading.progress}%)</span>
         <SampleTag show={summary.nowReading.sample} />
       </>
     ) : null,
@@ -83,7 +84,8 @@ export function Motd({ profile, summary, asOf }: { profile: Profile; summary: Mo
         <Link href={`/travel/${summary.lastTrip.slug}`} data-nav-item>
           {summary.lastTrip.host}
         </Link>
-        {` (${summary.lastTrip.start})`}
+        {' '}
+        <span className="whitespace-nowrap">({summary.lastTrip.start})</span>
         <SampleTag show={summary.lastTrip.sample} />
       </>
     ) : null,
@@ -92,12 +94,21 @@ export function Motd({ profile, summary, asOf }: { profile: Profile; summary: Mo
   return (
     <>
       <pre className="motd">
-        {lines.map((line, i) => (
-          <span key={i} className="motd-line" style={{ '--i': i } as CSSProperties}>
-            {line}
-            {'\n'}
-          </span>
-        ))}
+        {lines.map((line, i) => {
+          // Lines with a label wrap under their value: 14 characters in for " * Role:", 15 for the
+          // rest. Plain sentences (the welcome and the date line) wrap from the left edge.
+          const hang = typeof line !== 'string' ? 15 : line.startsWith(' * ') ? 14 : 0;
+          return (
+            <span
+              key={i}
+              className={hang ? 'motd-line motd-hang' : 'motd-line'}
+              style={{ '--i': i, ...(hang ? { '--hang': `${hang}ch` } : {}) } as CSSProperties}
+            >
+              {line}
+              {'\n'}
+            </span>
+          );
+        })}
       </pre>
       <MotdPlayback />
     </>
