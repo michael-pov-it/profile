@@ -68,7 +68,7 @@ export function KeyboardNav() {
         Keyboard shortcuts
       </h2>
       <dl className="grid grid-cols-[10ch_minmax(0,1fr)] gap-y-1">
-        <dt><kbd>1</kbd>-<kbd>6</kbd></dt>
+        <dt><kbd>0</kbd>-<kbd>6</kbd></dt>
         <dd>switch section</dd>
         <dt><kbd>j</kbd> <kbd>k</kbd></dt>
         <dd>next / previous item</dd>

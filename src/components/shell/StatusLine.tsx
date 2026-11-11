@@ -10,7 +10,7 @@ export function StatusLine({ uptime }: { uptime?: string }) {
           <kbd>?</kbd> keys
         </button>
         <span>
-          <kbd>1-6</kbd> tabs
+          <kbd>0-6</kbd> tabs
         </span>
         <span>
           <kbd>j/k</kbd> move

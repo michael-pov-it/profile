@@ -11,6 +11,10 @@ describe('activeTabHref', () => {
     expect(activeTabHref('/books/atomic-habits')).toBe('/books');
   });
 
+  it('matches the setup tab', () => {
+    expect(activeTabHref('/setup')).toBe('/setup');
+  });
+
   it('returns undefined for unknown paths', () => {
     expect(activeTabHref('/nope')).toBeUndefined();
   });
@@ -31,7 +35,11 @@ describe('promptPath', () => {
 });
 
 describe('TABS', () => {
-  it('assigns keys 1-6 in order', () => {
-    expect(TABS.map((t) => t.key).join('')).toBe('123456');
+  it('assigns keys 0-6 in order', () => {
+    expect(TABS.map((t) => t.key).join('')).toBe('0123456');
+  });
+
+  it('lists the tabs in the agreed order', () => {
+    expect(TABS.map((t) => t.href)).toEqual(['/', '/setup', '/hobbies', '/languages', '/sport', '/travel', '/books']);
   });
 });

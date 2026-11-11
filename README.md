@@ -67,4 +67,4 @@ Locally the account lives in `.admin-dev/` (ignored by git) and saves go straigh
 
 ## Keyboard
 
-`1`–`6` switch sections, `j`/`k` move between items, `Enter` opens, `t` switches theme (crt / printout), `?` shows help.
+`0`–`6` switch sections, `j`/`k` move between items, `Enter` opens, `t` switches theme (crt / printout), `?` shows help.
