@@ -1,6 +1,7 @@
 ---
 name: Web development
 description: Developing websites and web applications
+state: active
 ---
 
 Latest sites:

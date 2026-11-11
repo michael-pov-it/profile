@@ -1,6 +1,7 @@
 ---
 name: Mobile app development
 description: Developing mobile applications
+state: active
 ---
 
 Latest app:
