@@ -1,5 +1,6 @@
 import type { Book, Hobby, Language, Machine, Sport, Trip } from '@/lib/content/collections';
 import { connectionPhrase } from './setup';
+import { languageStatus } from './languages';
 import { countryCount, hostName } from './travel';
 
 export interface MotdSummary {
@@ -48,7 +49,7 @@ export function summarize(input: {
           sample: lastTrip.sample,
         }
       : undefined,
-    languagesRunning: input.languages.filter((l) => l.level !== l.target).length,
+    languagesRunning: input.languages.filter((l) => languageStatus(l) === 'running').length,
     languagesTotal: input.languages.length,
     streak: streakSport ? { sport: streakSport.name, days: streakSport.streakDays ?? 0, sample: streakSport.sample } : undefined,
     hobbiesActive: input.hobbies.filter((h) => h.state === 'active').length,

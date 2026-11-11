@@ -15,3 +15,9 @@ export function pipelineStages(level: Cefr, target: Cefr): { stage: Cefr; status
 export function pipelineStatus(level: Cefr, target: Cefr): 'running' | 'passed' {
   return level === target ? 'passed' : 'running';
 }
+
+// A native language has no stages to run, so it counts as passed.
+export function languageStatus(lang: { native: boolean; level?: Cefr; target?: Cefr }): 'running' | 'passed' {
+  if (lang.native || !lang.level || !lang.target) return 'passed';
+  return pipelineStatus(lang.level, lang.target);
+}

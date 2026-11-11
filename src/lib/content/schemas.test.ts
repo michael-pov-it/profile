@@ -132,6 +132,33 @@ describe('languageSchema duolingoScore', () => {
   });
 });
 
+describe('languageSchema native', () => {
+  const base = { name: 'Russian', since: '1994' };
+
+  it('accepts a native language without level or target', () => {
+    const lang = languageSchema.parse({ ...base, native: true });
+    expect(lang.native).toBe(true);
+    expect(lang.level).toBeUndefined();
+    expect(lang.target).toBeUndefined();
+  });
+
+  it('rejects a level on a native language, naming the field', () => {
+    const result = languageSchema.safeParse({ ...base, native: true, level: 'C2' });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].path).toEqual(['level']);
+  });
+
+  it('still requires level and target when not native', () => {
+    const result = languageSchema.safeParse(base);
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.map((i) => i.path[0])).toEqual(['level', 'target']);
+  });
+
+  it('defaults native to false', () => {
+    expect(languageSchema.parse({ ...base, level: 'A2', target: 'B1' }).native).toBe(false);
+  });
+});
+
 describe('languageSchema', () => {
   it('rejects a target below the current level', () => {
     const result = languageSchema.safeParse({ name: 'German', level: 'B2', target: 'A1', since: '2024-01' });

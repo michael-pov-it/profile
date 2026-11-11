@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type Cefr, pipelineStages, pipelineStatus } from './languages';
+import { type Cefr, languageStatus, pipelineStages, pipelineStatus } from './languages';
 
 const statuses = (level: Cefr, target: Cefr) => pipelineStages(level, target).map((s) => `${s.stage}:${s.status}`);
 
@@ -21,5 +21,16 @@ describe('pipelineStatus', () => {
   it('is running until the target is reached', () => {
     expect(pipelineStatus('B1', 'B2')).toBe('running');
     expect(pipelineStatus('C1', 'C1')).toBe('passed');
+  });
+});
+
+describe('languageStatus', () => {
+  it('follows the pipeline for a learned language', () => {
+    expect(languageStatus({ native: false, level: 'B1', target: 'B2' })).toBe('running');
+    expect(languageStatus({ native: false, level: 'C1', target: 'C1' })).toBe('passed');
+  });
+
+  it('counts a native language as passed without a level', () => {
+    expect(languageStatus({ native: true })).toBe('passed');
   });
 });

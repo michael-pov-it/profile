@@ -14,8 +14,8 @@ describe('summarize', () => {
       { slug: 't2', title: 'T2', country: 'Iceland', countryCode: 'IS', start: '2026-06', cities: [{ name: 'Reykjavík', lat: 64.1, lng: -21.9 }], sample: true, body: '' },
     ];
     const languages: Language[] = [
-      { slug: 'de', name: 'German', level: 'B1', target: 'B2', since: '2024-01', methods: [], sample: false, body: '' },
-      { slug: 'en', name: 'English', level: 'C1', target: 'C1', since: '2010', methods: [], sample: false, body: '' },
+      { slug: 'de', name: 'German', native: false, level: 'B1', target: 'B2', since: '2024-01', methods: [], sample: false, body: '' },
+      { slug: 'en', name: 'English', native: false, level: 'C1', target: 'C1', since: '2010', methods: [], sample: false, body: '' },
     ];
     const sports: Sport[] = [
       { slug: 'run', name: 'Running', unit: 'km', weekly: [1, 2], records: [], events: [], streakDays: 41, active: true, sample: true, body: '' },

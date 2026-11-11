@@ -7,7 +7,7 @@ import { BackLink } from '@/components/shell/BackLink';
 import { Prompt } from '@/components/shell/Prompt';
 import { StatusDot } from '@/components/StatusDot';
 import { getLanguage, getLanguages } from '@/lib/content/collections';
-import { type StageStatus, pipelineStages, pipelineStatus } from '@/lib/tui/languages';
+import { type StageStatus, languageStatus, pipelineStages } from '@/lib/tui/languages';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -21,13 +21,18 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const lang = getLanguage((await params).slug);
-  return lang ? { title: lang.name, description: `${lang.name}: ${lang.level}, aiming for ${lang.target}` } : {};
+  if (!lang) return {};
+  const progress = lang.level && lang.target ? `${lang.level}, aiming for ${lang.target}` : 'native';
+  return { title: lang.name, description: `${lang.name}: ${progress}` };
 }
 
 export default async function LanguagePage({ params }: Params) {
   const { slug } = await params;
   const lang = getLanguage(slug);
   if (!lang) notFound();
+  // A native language has no CEFR stages: show a single finished one.
+  const stages: { stage: string; status: StageStatus }[] =
+    lang.level && lang.target ? pipelineStages(lang.level, lang.target) : [{ stage: 'native', status: 'passed' }];
 
   return (
     <article>
@@ -38,11 +43,15 @@ export default async function LanguagePage({ params }: Params) {
       </p>
       <dl className="mt-4 grid grid-cols-[10ch_minmax(0,1fr)] gap-x-[2ch] gap-y-1">
         <dt className="text-dim">status</dt>
-        <dd>{pipelineStatus(lang.level, lang.target)}</dd>
+        <dd>{languageStatus(lang)}</dd>
         <dt className="text-dim">level</dt>
-        <dd>{lang.level}</dd>
-        <dt className="text-dim">target</dt>
-        <dd>{lang.target}</dd>
+        <dd>{lang.level ?? 'native'}</dd>
+        {lang.target && (
+          <>
+            <dt className="text-dim">target</dt>
+            <dd>{lang.target}</dd>
+          </>
+        )}
         <dt className="text-dim">since</dt>
         <dd>{lang.since}</dd>
         {lang.streakDays !== undefined && (
@@ -61,8 +70,8 @@ export default async function LanguagePage({ params }: Params) {
 
       <h2 className="t-title mt-12 mb-3">stages</h2>
       <ol className="rows">
-        {pipelineStages(lang.level, lang.target).map((s) => (
-          <li key={s.stage} className="grid grid-cols-[2ch_4ch_minmax(0,1fr)] gap-x-[2ch] px-[1ch] py-1.5">
+        {stages.map((s) => (
+          <li key={s.stage} className="grid grid-cols-[2ch_6ch_minmax(0,1fr)] gap-x-[2ch] px-[1ch] py-1.5">
             <span>
               <StatusDot state={STAGE_DOT[s.status]} />
             </span>

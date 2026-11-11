@@ -99,8 +99,9 @@ export const COLLECTIONS: CollectionSpec[] = [
     titleOf: (d) => str(d.name),
     fields: [
       { name: 'name', label: 'Language', kind: 'text', required: true },
-      { name: 'level', label: 'Level now', kind: 'select', required: true, options: CEFR },
-      { name: 'target', label: 'Target level', kind: 'select', required: true, options: CEFR },
+      { name: 'native', label: 'Native language', kind: 'bool', hint: 'shows "native" in place of the levels; leave both levels empty' },
+      { name: 'level', label: 'Level now', kind: 'select', options: CEFR, hint: 'required unless native' },
+      { name: 'target', label: 'Target level', kind: 'select', options: CEFR, hint: 'required unless native' },
       { name: 'since', label: 'Since', kind: 'month', required: true, hint: 'YYYY-MM' },
       { name: 'methods', label: 'Methods', kind: 'tags', hint: 'one per line' },
       { name: 'streakDays', label: 'Streak (days)', kind: 'number' },

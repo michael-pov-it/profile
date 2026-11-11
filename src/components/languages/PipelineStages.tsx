@@ -8,7 +8,17 @@ export const STAGE_DOT: Record<StageStatus, DotState> = {
   skipped: 'off',
 };
 
-export function PipelineStages({ level, target }: { level: Cefr; target: Cefr }) {
+export function PipelineStages({ level, target }: { level?: Cefr; target?: Cefr }) {
+  // No level means a native language: one finished stage in place of A1 to C2.
+  if (!level || !target) {
+    return (
+      <span className="stages">
+        <span className="stage">
+          <StatusDot state="done" /> native
+        </span>
+      </span>
+    );
+  }
   return (
     <span className="stages">
       {pipelineStages(level, target).map((s) => (
