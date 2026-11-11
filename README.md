@@ -1,6 +1,6 @@
 # mike-g profile
 
-Personal site styled as a retro terminal. Each section looks like the ops tool that fits it: an SSH login message and `git log` on the home page, `htop` for books, `traceroute` for travel, a CI pipeline for languages, `btop` for sport and `systemctl` for hobbies.
+Personal site styled as a retro terminal. Each section looks like the ops tool that fits it: an SSH login message and `git log` on the home page, `htop` for books, `traceroute` for travel, a CI pipeline for languages, `btop` for sport, `systemctl` for hobbies and `fastfetch` for setup.
 
 ## Develop
 

@@ -1,19 +1,20 @@
 # Project context: mike-g profile
 
-Read this first when picking the project back up. It records what the site is, how it's built and deployed, what was done and why, and what's still open. Last updated 2026-09-29.
+Read this first when picking the project back up. It records what the site is, how it's built and deployed, what was done and why, and what's still open. Last updated 2026-11-11.
 
 ## What it is
 
 Mike G.'s personal site (SRE & Dev/AI/Sec Ops Architect). It's styled as a retro terminal "OS", and each section looks like the ops tool that fits it:
 
-| Route | Styled as |
+| Route (key) | Styled as |
 |---|---|
-| `/` | An SSH login message summarizing every section, then `git log --graph` for career (overlapping jobs drawn as parallel lanes), then `ls ~/certs` and `finger mike` for contact |
-| `/books`, `/books/[slug]` | `htop` list: R = reading, S = paused, progress meters. Detail pages are `man` pages. |
-| `/travel`, `/travel/[slug]` | `traceroute` hops with distance from home, plus a dot-matrix world map |
-| `/languages`, `/languages/[slug]` | A CI pipeline: CEFR levels A1–C2 as passed / running / pending / skipped stages |
-| `/sport`, `/sport/[slug]` | btop-style panels: weekly sparkline, this week / average / peak, records, events |
-| `/hobbies`, `/hobbies/[slug]` | `systemctl` units: active (running) or inactive (dead) |
+| `/` (0) | An SSH login message summarizing every section, then `git log --graph` for career (overlapping jobs drawn as parallel lanes), then `ls ~/certs` and `finger mike` for contact |
+| `/setup` (1) | `fastfetch` blocks, one per machine, grouped work and home: cpu, ram, ssd, net rows. No detail pages. |
+| `/hobbies`, `/hobbies/[slug]` (2) | `systemctl` units: active (running) or inactive (dead) |
+| `/languages`, `/languages/[slug]` (3) | A CI pipeline: CEFR levels A1–C2 as passed / running / pending / skipped stages |
+| `/sport`, `/sport/[slug]` (4) | btop-style panels: weekly sparkline, this week / average / peak, records, events |
+| `/travel`, `/travel/[slug]` (5) | `traceroute` hops with distance from home, plus a dot-matrix world map |
+| `/books`, `/books/[slug]` (6) | `htop` list: R = reading, S = paused, progress meters. Detail pages are `man` pages. |
 | `/admin/*` | Private panel for adding and editing content, passkey or password sign-in. Off unless `ADMIN_SESSION_SECRET` is set. |
 
 - **Domain:** `mike.euhub.co` (`siteUrl` in `content/profile.md`). Not wired up yet; see Deployment.
@@ -36,7 +37,7 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 ## Code map
 
 - `content/`: every piece of site content is a Markdown file with frontmatter.
-  - `profile.md` is a single file; `career/`, `books/`, `travel/`, `languages/`, `sport/` and `hobbies/` hold one file per entry.
+  - `profile.md` is a single file; `career/`, `books/`, `travel/`, `languages/`, `sport/`, `hobbies/` and `machines/` hold one file per entry. `machines/` feeds the `/setup` page; it is not called `setup/` because `/admin/setup` is the account-creation page.
   - The file name is the URL slug.
   - The field reference is in the root `README.md`.
 - `src/lib/content/`:
@@ -45,7 +46,7 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
   - `collections.ts` has the typed `get*()` accessors; `routes.ts` lists every URL for the sitemap.
 - `src/lib/tui/`: pure, unit-tested logic.
   - Navigation: tabs, keys.
-  - Per section: meter, books, travel and travelMap, languages (CEFR stages), sport (sparkline and stats).
+  - Per section: meter, books, travel and travelMap, languages (CEFR stages), sport (sparkline and stats), setup (machine grouping and the home-page connection phrase).
   - Home page: time, gitGraph (career lane layout), motd (home-page summary).
 - `src/lib/admin/`, `src/components/admin/`, `src/app/admin/`, `src/app/api/admin/`, `src/proxy.ts`: the admin panel. Design in `docs/superpowers/specs/2026-10-05-admin-panel-design.md`.
   - `config`, `runtime`: environment and the "admin is off" switch. `password` (scrypt), `tokens`, `session` (signed cookies), `webauthn` (SimpleWebAuthn), `account` (lock-out rules), `store` (Azure Table, dev file, memory).
@@ -80,7 +81,7 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
   - From 1536px up, the frame is `min(94vw, 200ch)`.
   - Home, travel and sport switch to multi-column layouts.
   - Reading text stays at 68 characters per line.
-- **Keyboard:** `1`–`6` switch tabs, `j`/`k` move between rows, `t` switches theme, `?` opens help. Shortcuts never fire with Ctrl/Cmd/Alt held or while typing in a field.
+- **Keyboard:** `0`–`6` switch tabs, `j`/`k` move between rows, `t` switches theme, `?` opens help. Shortcuts never fire with Ctrl/Cmd/Alt held or while typing in a field.
 
 ## Deployment
 
@@ -123,9 +124,8 @@ npm run build    # safe while dev runs: Next 16 keeps dev output in .next/dev
 
 - **Rotate the leaked service principal secret.** On the dell machine, `~/.zsh_history` holds an `az login --service-principal` line with the secret of principal `72fa1486-fa27-4258-8747-d6758943dca1` (Contributor on `rg-lkwc-engine-prod`, unrelated to this site). Rotate it in Entra and delete the line.
 - **Decide whether the site needs a real wall.** It is hidden from crawlers by robots rules only (see Deployment). A scraper that ignores them, or anyone with the link, still gets in. Options: Container Apps built-in auth with Entra (recommended, one Bicep change) or an ingress IP allowlist. Not requested yet.
-- **Going public later.** Replace the sample content first, then run the deploy workflow with `site_indexable` ticked. Also confirm `siteUrl` in `content/profile.md` (currently `https://mike.euhub.co`) and re-check robots.txt and the sitemap on the live site.
+- **Going public later.** Run the deploy workflow with `site_indexable` ticked. Also confirm `siteUrl` in `content/profile.md` (currently `https://mike.euhub.co`) and re-check robots.txt and the sitemap on the live site.
 - **Unused GitHub variables.** `AZURE_ACR_NAME` and `AZURE_CONTAINER_APPS_ENVIRONMENT` on the `production` environment are leftovers from the abandoned shared-platform setup. The workflow ignores them, so delete them when convenient.
-- **Replace sample content.** Books, travel, languages, sport and hobbies are placeholders with `sample: true`, and they show a `sample` tag. `grep -rl "sample: true" content/` lists them. Career and profile are real data.
 - **Confirm the travel origin.** `home` is set to Bratislava, a guess from the +421 phone number.
 - **Phone layout:** the intro lines wrap unevenly at 390px. Smaller intro text or no-wrap values would fix it.
 - **UHD:** the frame caps at 200 characters, about 80% of a 3840px screen. Raise the cap if Mike wants it wider.
