@@ -1,8 +1,8 @@
 ---
-company: Geniusee
+company: "Geniusee (Project: booknook.com)"
 role: DevOps Engineer
-start: "2022-05"
-end: "2023-10"
+start: 2022-05
+end: 2023-10
 ---
 
 Full-time. Remote.
