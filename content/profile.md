@@ -18,7 +18,7 @@ certifications:
   - AWS Certified Solutions Architect – Associate (SAA-C03)
   - CCAR-F (in-progress)
 contact:
-  email: mike@euhub.sk
+  email: mike@euhub.co
 ---
 
 Infrastructure as code, GitOps, and platforms that stay up. Migrating legacy VMs to containers on AWS, keeping `main` production-ready, and designing for SOC 2 from day one.
